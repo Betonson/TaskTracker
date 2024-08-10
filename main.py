@@ -1,5 +1,8 @@
 import telebot
 import sqlite3
+import time
+from datetime import datetime
+from threading import Thread
 
 BotAPI = '7238767447:AAEaRtQH0PHJdA5XxzUBOx2aqFY0WmlKyMM'
 
@@ -32,6 +35,26 @@ def firstTimeNoFlamePls(message):
             bot.send_message(message.chat.id, "Не удалось зарегистрировать нового пользователя")
         else:
             bot.send_message(message.chat.id, f"Привет, {username}, будем знакомы!")
+
+@bot.message_handler(commands=["setTimer"])
+def initTimeHandler(message):
+    bot.send_message(message.chat.id, f"На какое время установить таймер?")
+    bot.register_next_step_handler(message, setTimerInThread)
+        
+
+def setTimerInThread(message):
+    timeFromMessage = datetime.strptime(message.text,'%H:%M') 
+    totalMinutes = timeFromMessage.minute - time.localtime().tm_min if timeFromMessage.minute > time.localtime().tm_min else 60 + timeFromMessage.minute - time.localtime().tm_min
+    total_seconds = (timeFromMessage.hour-time.localtime().tm_hour)*3600 + (totalMinutes)*60 - time.localtime().tm_sec
+    bot.send_message(message.chat.id, f"Устанавливаю таймер на {message.text}")
+    bot.send_message(message.chat.id, f"Таймер сработает через {total_seconds} секунд")
+    timerThread = Thread(target=sleepStarter, args=(message.chat.id, total_seconds,))
+    timerThread.start()
+
+
+def sleepStarter(chatID,total_seconds):
+    time.sleep(total_seconds)
+    bot.send_message(chatID, f"Сработал таймер Сейчас {time.localtime()}")
 
 def getUserInfo(telegramID):
     databaseConnection = sqlite3.connect(databaseName)
