@@ -32,7 +32,7 @@ def firstTimeNoFlamePls(message):
         registerNewUser(message)
         username = getUserInfo(message.from_user.id)
         if username == 0:
-            bot.send_message(message.chat.id, "Не удалось зарегистрировать нового пользователя")
+            bot.send_message(message.chat.id, "Не удалось зарегистрировать нового пользователя, сорян")
         else:
             bot.send_message(message.chat.id, f"Привет, {username}, будем знакомы!")
 
