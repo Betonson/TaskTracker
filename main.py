@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 from threading import Thread
 
-BotAPI = '7238767447:AAEaRtQH0PHJdA5XxzUBOx2aqFY0WmlKyMM'
+BotAPI = '7238767447:AAH5SSo1Bk7KEiwuZZseWdQbKfSpHYdLD38'
 
 bot = telebot.TeleBot(BotAPI)
 databaseName = 'pinboard.sql'
@@ -36,7 +36,7 @@ def firstTimeNoFlamePls(message):
         else:
             bot.send_message(message.chat.id, f"Привет, {username}, будем знакомы!")
 
-@bot.message_handler(commands=["setTimer"])
+@bot.message_handler(commands=["settimer"])
 def initTimeHandler(message):
     bot.send_message(message.chat.id, f"На какое время установить таймер?")
     bot.register_next_step_handler(message, setTimerInThread)
